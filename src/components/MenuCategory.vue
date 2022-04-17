@@ -1,5 +1,5 @@
 <template>
-  <q-list bordered class="rounded-borders col">
+  <q-list bordered class="rounded-borders full-width">
     <q-expansion-item
       v-for="category in categories"
       :key="category.id"

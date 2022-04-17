@@ -1,5 +1,6 @@
 <template>
-  <q-page class="row items-start justify-evenly">
+  <q-page class="column items-start">
+    <Banner title="Cardápio" />
     <MenuCategory :categories="categories" />
   </q-page>
 </template>
@@ -7,11 +8,13 @@
 <script lang="ts">
 import { MenuCategoryModel } from 'components/models'
 import MenuCategory from 'components/MenuCategory.vue'
+import Banner from 'components/Banner.vue'
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MenuPage',
   components: {
+    Banner,
     MenuCategory
   },
   setup () {
