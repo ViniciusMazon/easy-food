@@ -4,20 +4,9 @@
 
     <q-card-section>
       <q-btn
-        v-if="isAvailableIcon"
         fab
         color="primary"
-        icon="lock"
-        class="absolute"
-        style="top: 0; right: 12px; transform: translateY(-50%);"
-        @click="toggleAvailability"
-      />
-
-      <q-btn
-        v-else
-        fab
-        color="primary"
-        icon="paue"
+        :icon="isAvailableIcon"
         class="absolute"
         style="top: 0; right: 12px; transform: translateY(-50%);"
         @click="toggleAvailability"
@@ -57,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MenuItem',
@@ -93,10 +82,10 @@ export default defineComponent({
   },
   setup (props) {
     const isPriceLocked = ref<boolean>(true)
-    const isAvailableIcon = ref<boolean>(props.isAvailable)
+    const isAvailableIcon = ref<string>(props.isAvailable ? 'pause' : 'play_arrow')
 
     function toggleAvailability () {
-      isAvailableIcon.value = !isAvailableIcon.value
+      isAvailableIcon.value = isAvailableIcon.value === 'pause' ? 'play_arrow' : 'pause'
     }
 
     function toggleLockPrice () {
@@ -105,6 +94,7 @@ export default defineComponent({
 
     return {
       isPriceLocked,
+      isAvailableIcon,
       toggleLockPrice,
       toggleAvailability
     }

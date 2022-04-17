@@ -1,4 +1,4 @@
-export interface ModelItemModel {
+export interface MenuItemModel {
   id: number;
   title: string;
   description: string;

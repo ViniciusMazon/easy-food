@@ -34,6 +34,36 @@ export default defineComponent({
         link: 'teste',
         image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
         isAvailable: false
+      },
+      {
+        id: 2,
+        title: 'Pizza 3 sabores',
+        description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
+        price: 'R$ 35,00',
+        categoryId: 1,
+        link: 'teste',
+        image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
+        isAvailable: false
+      },
+      {
+        id: 3,
+        title: 'Pizza 3 sabores',
+        description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
+        price: 'R$ 35,00',
+        categoryId: 1,
+        link: 'teste',
+        image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
+        isAvailable: false
+      },
+      {
+        id: 4,
+        title: 'Pizza 3 sabores',
+        description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
+        price: 'R$ 35,00',
+        categoryId: 1,
+        link: 'teste',
+        image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
+        isAvailable: false
       }
     ])
 
