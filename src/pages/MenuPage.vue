@@ -1,73 +1,75 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <MenuItem
-      v-for="item in items"
-      :key="item.id"
-      :title="item.title"
-      :description="item.description"
-      :price="item.price"
-      :categoryId="item.categoryId"
-      :link="item.link"
-      :image="item.image"
-    />
+  <q-page class="row items-start justify-evenly">
+    <MenuCategory :categories="categories" />
   </q-page>
 </template>
 
 <script lang="ts">
-import { MenuItemModel } from 'components/models'
-import MenuItem from 'components/MenuItem.vue'
+import { MenuCategoryModel } from 'components/models'
+import MenuCategory from 'components/MenuCategory.vue'
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MenuPage',
   components: {
-    MenuItem
+    MenuCategory
   },
   setup () {
-    const items = ref<MenuItemModel[]>([
+    const categories = ref<MenuCategoryModel[]>([
       {
         id: 1,
-        title: 'Pizza 3 sabores',
-        description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-        price: 'R$ 35,00',
-        categoryId: 1,
-        link: 'teste',
-        image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-        isAvailable: false
+        title: 'Pizza',
+        items: [
+          {
+            id: 1,
+            title: 'Pizza 3 sabores',
+            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
+            price: 'R$ 35,00',
+            categoryId: 1,
+            link: 'teste',
+            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
+            isAvailable: false
+          },
+          {
+            id: 2,
+            title: 'Pizza 3 sabores',
+            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
+            price: 'R$ 35,00',
+            categoryId: 1,
+            link: 'teste',
+            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
+            isAvailable: false
+          },
+          {
+            id: 3,
+            title: 'Pizza 3 sabores',
+            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
+            price: 'R$ 35,00',
+            categoryId: 1,
+            link: 'teste',
+            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
+            isAvailable: false
+          },
+          {
+            id: 4,
+            title: 'Pizza 3 sabores',
+            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
+            price: 'R$ 35,00',
+            categoryId: 1,
+            link: 'teste',
+            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
+            isAvailable: false
+          }
+        ]
       },
       {
         id: 2,
-        title: 'Pizza 3 sabores',
-        description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-        price: 'R$ 35,00',
-        categoryId: 1,
-        link: 'teste',
-        image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-        isAvailable: false
-      },
-      {
-        id: 3,
-        title: 'Pizza 3 sabores',
-        description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-        price: 'R$ 35,00',
-        categoryId: 1,
-        link: 'teste',
-        image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-        isAvailable: false
-      },
-      {
-        id: 4,
-        title: 'Pizza 3 sabores',
-        description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-        price: 'R$ 35,00',
-        categoryId: 1,
-        link: 'teste',
-        image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-        isAvailable: false
+        title: 'Bebidas',
+        items: []
       }
     ])
 
-    return { items }
+    return { categories }
   }
 })
 </script>

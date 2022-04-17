@@ -54,7 +54,7 @@ const linksList = [
     title: 'Pedidos',
     caption: 'Seus pedidos em andamento',
     icon: 'notifications',
-    link: 'https://quasar.dev'
+    link: '/'
   },
   {
     title: 'Cardápio',
@@ -66,13 +66,13 @@ const linksList = [
     title: 'Chat',
     caption: 'Converse com seus clientes',
     icon: 'chat',
-    link: 'https://chat.quasar.dev'
+    link: '/'
   },
   {
     title: 'Feedbacks',
     caption: 'Avaliações e feedbacks de clientes',
     icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    link: '/'
   }
 ]
 

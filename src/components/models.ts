@@ -9,6 +9,12 @@ export interface MenuItemModel {
   isAvailable: boolean;
 }
 
+export interface MenuCategoryModel {
+  id: number;
+  title: string;
+  items: MenuItemModel[];
+}
+
 export interface Meta {
   totalCount: number;
 }
