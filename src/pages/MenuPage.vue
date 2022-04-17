@@ -1,6 +1,6 @@
 <template>
   <q-page class="column items-start">
-    <Banner title="Cardápio" />
+    <Banner title="Cardápio" btnTitle="Adicionar produto" :action="addProduct"/>
     <MenuCategory :categories="categories" />
   </q-page>
 </template>
@@ -72,7 +72,14 @@ export default defineComponent({
       }
     ])
 
-    return { categories }
+    function addProduct () {
+      alert('Teste')
+    }
+
+    return {
+      categories,
+      addProduct
+    }
   }
 })
 </script>

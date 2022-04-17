@@ -4,19 +4,22 @@
       v-for="category in categories"
       :key="category.id"
       :label="category.title"
-      :caption="category.items.length"
+      :caption="`${category.items.length} produtos`"
+      default-opened
       class="col-12"
       >
-      <span v-if="category.items.length === 0">
+      <div
+        v-if="category.items.length === 0"
+        class="text-blue-grey q-my-lg text-center"
+      >
         Esta categoria não tem produtos
-      </span>
+      </div>
       <MenuCategoryItems v-else :items="category.items" class="row" />
     </q-expansion-item>
   </q-list>
 </template>
 
 <script lang="ts">
-import { MenuCategoryModel } from 'components/models'
 import MenuCategoryItems from 'components/MenuCategoryItems.vue'
 import { defineComponent } from 'vue'
 
@@ -27,7 +30,7 @@ export default defineComponent({
   },
   props: {
     categories: {
-      type: Array[MenuCategoryModel],
+      type: Array,
       required: true
     }
   }

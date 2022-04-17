@@ -65,13 +65,19 @@ const linksList = [
     title: 'Chat',
     caption: 'Converse com seus clientes',
     icon: 'chat',
-    link: '/'
+    link: '/chat'
   },
   {
     title: 'Feedbacks',
     caption: 'Avaliações e feedbacks de clientes',
     icon: 'favorite',
-    link: '/'
+    link: '/feedbacks'
+  },
+  {
+    title: 'Dashboard',
+    caption: 'Acompanhe seus resultados',
+    icon: 'dashboard',
+    link: '/dashboard'
   }
 ]
 

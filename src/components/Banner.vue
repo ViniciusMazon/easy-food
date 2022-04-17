@@ -1,6 +1,16 @@
 <template>
   <div class="bg-banner full-width">
-    <h1 class="text-grey-1 q-ml-lg">{{ title }}</h1>
+    <h1 class="text-grey-1 q-my-sm q-py-md q-px-md full-width">
+      {{ title }}
+    </h1>
+    <div v-if="btnTitle" class="row justify-end q-my-md q-mx-md">
+    <q-btn
+      color="white"
+      text-color="black"
+      :label="btnTitle"
+      @click="action"
+      />
+    </div>
   </div>
 </template>
 
@@ -13,6 +23,14 @@ export default defineComponent({
     title: {
       type: String,
       required: true
+    },
+    btnTitle: {
+      type: String,
+      required: false
+    },
+    action: {
+      type: Function,
+      required: false
     }
   }
 })

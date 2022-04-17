@@ -1,7 +1,7 @@
 <template>
    <div class="row">
     <MenuItem
-      class="col-3 q-mx-md q-my-md"
+      class="col-2 q-mx-md q-my-md"
       v-for="item in items"
       :key="item.id"
       :title="item.title"
@@ -26,7 +26,7 @@ export default defineComponent({
   },
   props: {
     items: {
-      type: Array[MenuItemModel],
+      type: Array,
       required: true
     }
   }
