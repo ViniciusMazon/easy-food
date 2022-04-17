@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header elevated class="bg-red-6">
       <q-toolbar>
         <q-btn
           flat
@@ -10,11 +10,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
-        <q-toolbar-title>
-          Easy Food
-        </q-toolbar-title>
-
+        <q-space ></q-space>
         <div>Fechar restaurante</div>
       </q-toolbar>
     </q-header>
@@ -28,7 +24,10 @@
         <q-item-label
           header
         >
-          Menu
+          <img
+            src="../assets/logo.png"
+            class="full-width"
+          />
         </q-item-label>
 
         <EssentialLink
