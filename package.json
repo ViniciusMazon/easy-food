@@ -13,7 +13,10 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.5",
+    "i": "^0.3.7",
+    "npm": "^8.7.0",
     "quasar": "^2.6.0",
+    "tiny-typed-emitter": "^2.1.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"
   },

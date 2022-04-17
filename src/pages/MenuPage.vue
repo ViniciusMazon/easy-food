@@ -1,5 +1,6 @@
 <template>
   <q-page class="column items-start">
+    <ModalFactory />
     <Banner title="Cardápio" btnTitle="Adicionar produto" :action="addProduct"/>
     <MenuCategory :categories="categories" />
   </q-page>
@@ -10,12 +11,15 @@ import { MenuCategoryModel } from 'components/models'
 import MenuCategory from 'components/MenuCategory.vue'
 import Banner from 'components/Banner.vue'
 import { defineComponent, ref } from 'vue'
+import ModalFactory from 'components/ModalFactory.vue'
+import useModal from '../hooks/useModal'
 
 export default defineComponent({
   name: 'MenuPage',
   components: {
     Banner,
-    MenuCategory
+    MenuCategory,
+    ModalFactory
   },
   setup () {
     const categories = ref<MenuCategoryModel[]>([
@@ -72,8 +76,12 @@ export default defineComponent({
       }
     ])
 
+    const modal = useModal()
+
     function addProduct () {
-      alert('Teste')
+      modal.open({
+        component: 'AddProductModal'
+      })
     }
 
     return {
