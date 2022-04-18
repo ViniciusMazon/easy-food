@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts">
-import { MenuItemModel } from 'components/models'
 import MenuItem from 'components/MenuItem.vue'
 import { defineComponent } from 'vue'
 
