@@ -3,8 +3,9 @@
     <h2 class="text-grey q-my-sm q-py-md q-px-md full-width">
       {{ title }}
     </h2>
-    <div v-if="btnTitle" class="row justify-end q-my-md q-mx-md">
-    <q-btn
+    <div class="row justify-end q-my-md q-mx-md">
+      <q-btn
+      v-show="btnTitle"
       color="primary"
       text-color="white"
       :label="btnTitle"
