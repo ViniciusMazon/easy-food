@@ -11,7 +11,10 @@
           @click="toggleLeftDrawer"
         />
         <q-space ></q-space>
-        <div>Fechar restaurante</div>
+        <q-btn flat size="sm" @click="toggleIsOpen">
+          <q-icon name="circle" size="xs" :color="isOpenStatusColor" class="q-mr-sm"></q-icon>
+          {{ isOpenText }}
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -36,6 +39,19 @@
           v-bind="link"
         />
       </q-list>
+
+      <q-btn-dropdown flat menu-anchor="top start" padding="lg" color="grey" label="Nome do estabeleciomento aqui">
+        <q-list>
+          <q-item clickable v-close-popup @click="onItemClick">
+            <q-item-section>
+              <q-item-label>
+                <q-icon name="logout" color="grey" class="q-mr-sm"/>
+                Sair
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+    </q-btn-dropdown>
     </q-drawer>
 
     <q-page-container>
@@ -45,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
@@ -95,8 +111,20 @@ export default defineComponent({
 
   setup () {
     const leftDrawerOpen = ref(false)
+    const isOpen = ref(false)
+
+    const isOpenText = computed((): string => isOpen.value ? 'Aberto' : 'Fechado')
+    const isOpenStatusColor = computed((): string => isOpen.value ? 'green' : 'primary')
+
+    function toggleIsOpen () {
+      isOpen.value = !isOpen.value
+    }
 
     return {
+      isOpen,
+      isOpenText,
+      isOpenStatusColor,
+      toggleIsOpen,
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {
