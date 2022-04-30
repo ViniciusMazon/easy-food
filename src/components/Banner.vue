@@ -1,12 +1,12 @@
 <template>
   <div class="bg-banner full-width">
-    <h1 class="text-grey-1 q-my-sm q-py-md q-px-md full-width">
+    <h2 class="text-grey q-my-sm q-py-md q-px-md full-width">
       {{ title }}
-    </h1>
+    </h2>
     <div v-if="btnTitle" class="row justify-end q-my-md q-mx-md">
     <q-btn
-      color="white"
-      text-color="black"
+      color="primary"
+      text-color="white"
       :label="btnTitle"
       @click="action"
       />
