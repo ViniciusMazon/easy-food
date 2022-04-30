@@ -2,7 +2,12 @@
   <q-item
     clickable
     :to="link"
+    :disable="!isAvailable"
   >
+    <q-tooltip v-if="!isAvailable">
+      Disponível em breve
+    </q-tooltip>
+
     <q-item-section
       v-if="icon"
       avatar
@@ -41,6 +46,11 @@ export default defineComponent({
     icon: {
       type: String,
       default: ''
+    },
+
+    isAvailable: {
+      type: Boolean,
+      default: false
     }
   }
 })

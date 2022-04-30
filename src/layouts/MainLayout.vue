@@ -53,31 +53,36 @@ const linksList = [
     title: 'Pedidos',
     caption: 'Seus pedidos em andamento',
     icon: 'notifications',
-    link: '/'
+    link: '/',
+    isAvailable: true
   },
   {
     title: 'Cardápio',
     caption: 'Seus produtos',
     icon: 'book',
-    link: '/menu'
+    link: '/menu',
+    isAvailable: true
   },
   {
     title: 'Chat',
     caption: 'Converse com seus clientes',
     icon: 'chat',
-    link: '/chat'
+    link: '/chat',
+    isAvailable: false
   },
   {
     title: 'Feedbacks',
     caption: 'Avaliações e feedbacks de clientes',
     icon: 'favorite',
-    link: '/feedbacks'
+    link: '/feedbacks',
+    isAvailable: false
   },
   {
     title: 'Dashboard',
     caption: 'Acompanhe seus resultados',
     icon: 'dashboard',
-    link: '/dashboard'
+    link: '/dashboard',
+    isAvailable: false
   }
 ]
 
