@@ -37,8 +37,8 @@
 
     <q-separator />
 
-    <q-card-actions>
-      <q-btn flat color="primary">
+    <q-card-actions class="row justify-end">
+      <q-btn flat color="grey" @click="(id) => handleOpenEditProductModal(id)">
         Editar
       </q-btn>
     </q-card-actions>
@@ -47,10 +47,15 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import useModal from '../hooks/useModal'
 
 export default defineComponent({
   name: 'MenuItem',
   props: {
+    id: {
+      type: Number,
+      required: true
+    },
     title: {
       type: String,
       required: true
@@ -81,6 +86,7 @@ export default defineComponent({
     }
   },
   setup (props) {
+    const modal = useModal()
     const isPriceLocked = ref<boolean>(true)
     const isAvailableIcon = ref<string>(props.isAvailable ? 'pause' : 'play_arrow')
 
@@ -92,11 +98,21 @@ export default defineComponent({
       isPriceLocked.value = !isPriceLocked.value
     }
 
+    function handleOpenEditProductModal (productId: number) {
+      modal.open({
+        component: 'AddProductModal',
+        props: {
+          productId
+        }
+      })
+    }
+
     return {
       isPriceLocked,
       isAvailableIcon,
       toggleLockPrice,
-      toggleAvailability
+      toggleAvailability,
+      handleOpenEditProductModal
     }
   }
 })

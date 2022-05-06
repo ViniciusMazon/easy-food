@@ -26,10 +26,11 @@
       <q-list>
         <q-item-label
           header
+          class="row justify-center q-my-md"
         >
           <img
             src="../assets/logo.png"
-            class="full-width"
+            width="180"
           />
         </q-item-label>
 

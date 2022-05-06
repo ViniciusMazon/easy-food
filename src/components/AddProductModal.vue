@@ -2,7 +2,8 @@
    <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
      <q-card class="text-gray-1" style="width: 900px">
       <q-card-section>
-        <div class="text-h6">Novo produto</div>
+        <div v-if="isEditing" class="text-h6">Editar produto</div>
+        <div v-else class="text-h6">Novo produto</div>
       </q-card-section>
 
       <q-stepper
@@ -89,14 +90,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { MenuItemModel, MenuCategoryModel } from 'components/models'
 import useModal from '../hooks/useModal'
 import { useQuasar } from 'quasar'
+import { httpClient } from '../services/httpClient'
 
 export default defineComponent({
   name: 'AddProductModal',
-  setup () {
+  props: {
+    productId: {
+      type: Number,
+      required: false
+    }
+  },
+  setup (props) {
     const modal = useModal()
     const $q = useQuasar()
     const product = ref<MenuItemModel>({
@@ -108,22 +116,47 @@ export default defineComponent({
       isAvailable: true
     })
 
-    const categories = ref<MenuCategoryModel[]>([
-      {
-        id: 1,
-        title: 'Pizza'
-      },
-      {
-        id: 2,
-        title: 'Bebidas'
-      }
-    ])
+    const categories = ref<MenuCategoryModel[]>([])
 
     const selectedCategoryTitle = ref<string>('')
     const newCategoryTitle = ref<string>('')
 
     const categoriesTitle = computed(() => categories.value.map(category => category.title))
     const isCreateCategoryAvailable = computed(() => selectedCategoryTitle.value === '')
+    const isEditing = computed(() => !!props.productId)
+
+    onMounted(() => {
+      getCategoriesList()
+      console.log(isEditing.value)
+      console.log(props.productId)
+      isEditing.value && getProduct()
+    })
+
+    async function getCategoriesList () {
+      try {
+        $q.loading.show()
+        const { data: response } = await httpClient.get('categories')
+        if (!response.data) throw new Error('Ocorreu um erro ao carregar as inforações. Tente novamente mais tarde')
+        categories.value = response.data
+      } catch (error) {
+        console.error(error)
+      } finally {
+        $q.loading.hide()
+      }
+    }
+
+    async function getProduct () {
+      try {
+        $q.loading.show()
+        const { data: response } = await httpClient.get(`products/${props.productId}`)
+        if (!response.data) throw new Error('Ocorreu um erro ao carregar as informações do produto. Tente novamente mais tarde')
+        product.value = response.data
+      } catch (error) {
+        console.error(error)
+      } finally {
+        $q.loading.hide()
+      }
+    }
 
     function clearSelectedCategory () {
       selectedCategoryTitle.value = ''
@@ -155,7 +188,8 @@ export default defineComponent({
       newCategoryTitle,
       createCategory,
       isCreateCategoryAvailable,
-      clearSelectedCategory
+      clearSelectedCategory,
+      isEditing
     }
   }
 })
