@@ -7,10 +7,12 @@
 </template>
 
 <script lang="ts">
+import { useQuasar } from 'quasar'
 import { MenuCategoryModel } from 'components/models'
 import MenuCategory from 'components/MenuCategory.vue'
 import Banner from 'components/Banner.vue'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
+import { httpClient } from '../services/httpClient'
 import ModalFactory from 'components/ModalFactory.vue'
 import useModal from '../hooks/useModal'
 
@@ -22,61 +24,24 @@ export default defineComponent({
     ModalFactory
   },
   setup () {
-    const categories = ref<MenuCategoryModel[]>([
-      {
-        id: 1,
-        title: 'Pizza',
-        items: [
-          {
-            id: 1,
-            title: 'Pizza 3 sabores',
-            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-            price: 'R$ 35,00',
-            categoryId: 1,
-            link: 'teste',
-            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-            isAvailable: false
-          },
-          {
-            id: 2,
-            title: 'Pizza 3 sabores',
-            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-            price: 'R$ 35,00',
-            categoryId: 1,
-            link: 'teste',
-            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-            isAvailable: false
-          },
-          {
-            id: 3,
-            title: 'Pizza 3 sabores',
-            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-            price: 'R$ 35,00',
-            categoryId: 1,
-            link: 'teste',
-            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-            isAvailable: false
-          },
-          {
-            id: 4,
-            title: 'Pizza 3 sabores',
-            description: 'Uma deliciosa pizza de 3 sabores, quentinha, no forno a lenha',
-            price: 'R$ 35,00',
-            categoryId: 1,
-            link: 'teste',
-            image: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
-            isAvailable: false
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: 'Bebidas',
-        items: []
-      }
-    ])
-
+    const $q = useQuasar()
+    const categories = ref<MenuCategoryModel[]>([])
     const modal = useModal()
+
+    onMounted(() => getProducts())
+
+    async function getProducts () {
+      try {
+        $q.loading.show()
+        const { data: response } = await httpClient.get('products')
+        if (!response.data) throw new Error('Não foi possível carregar os produtos. Tente novamente mais tarde.')
+        categories.value = response.data
+      } catch (error) {
+        console.error(error)
+      } finally {
+        $q.loading.hide()
+      }
+    }
 
     function addProduct () {
       modal.open({

@@ -1,24 +1,126 @@
 <template>
   <q-page class="column items-start">
     <Banner title="Pedidos" />
+
+     <q-splitter
+      v-model="splitterModel"
+      class="full-width"
+      style="height: 80vh; width"
+      >
+      <template v-slot:before>
+        <div class="full-height col justify-between">
+          <q-input
+            outlined
+            bottom-slots
+            v-model="filter"
+            label="Filtrar por nº do pedido ou nome"
+            class="q-mx-sm"
+          >
+            <template v-slot:prepend>
+              <q-icon name="search" />
+            </template>
+
+            <template v-slot:append>
+              <q-icon v-if="filter !== ''" name="close" @click="filter = ''" class="cursor-pointer" />
+            </template>
+          </q-input>
+
+          <p class="text-right q-pr-md text-grey">Pedidos: {{ orders.length }}</p>
+
+          <OrdersList
+             v-for="order in orderFilters"
+             :key="order.id"
+             :order="order"
+             @click="() => handleSelectOrder(order)"
+           />
+        </div>
+      </template>
+
+      <template v-slot:after>
+        <div class="q-pa-md">
+          <OrderDetails v-if="selectedOrder" :order="selectedOrder" @change-status="changeStatus"/>
+        </div>
+      </template>
+    </q-splitter>
   </q-page>
 </template>
 
 <script lang="ts">
-import { Meta } from 'components/models'
-import { defineComponent, ref } from 'vue'
+import { useQuasar } from 'quasar'
+import { Meta, OrderModel } from 'components/models'
+import { defineComponent, ref, computed, onMounted } from 'vue'
+import { httpClient } from '../services/httpClient'
 import Banner from 'components/Banner.vue'
+import OrdersList from 'components/OrdersList.vue'
+import OrderDetails from 'components/OrderDetails.vue'
 
 export default defineComponent({
   name: 'IndexPage',
   components: {
-    Banner
+    Banner,
+    OrdersList,
+    OrderDetails
   },
   setup () {
+    const $q = useQuasar()
     const meta = ref<Meta>({
       totalCount: 1200
     })
-    return { meta }
+    const filter = ref<string>('')
+    const orders = ref<OrderModel[]>([])
+
+    const orderFilters = computed(() => {
+      if (!filter.value) {
+        return orders.value
+      }
+
+      return orders.value.filter(order => String(order.id) === filter.value || order.client.name === filter.value)
+    })
+    const selectedOrder = ref<OrderModel>()
+
+    onMounted(() => getOrders())
+
+    async function getOrders () {
+      try {
+        $q.loading.show()
+        const { data: response } = await httpClient.get('orders')
+        if (!response.data) throw new Error('Ocorreu um erro ao tentar carregar os pedidos. Tente novamente mais tarde')
+        orders.value = response.data
+      } catch (error) {
+        console.error(error)
+      } finally {
+        $q.loading.hide()
+      }
+    }
+
+    function handleSelectOrder (order: OrderModel) {
+      selectedOrder.value = order
+    }
+
+    function changeStatus (orderId: number, status: OrderModel['status']) {
+      console.log('Event: change-status')
+      const newOrderArray = orders.value.map(order => {
+        if (order.id === orderId) {
+          order.status = status
+          return order
+        }
+
+        return order
+      })
+
+      orders.value = newOrderArray
+    }
+
+    return {
+      meta,
+      orderFilters,
+      changeStatus,
+      selectedOrder,
+      orders,
+      handleSelectOrder,
+      filter,
+      splitterModel: ref(25)
+    }
   }
 })
 </script>
