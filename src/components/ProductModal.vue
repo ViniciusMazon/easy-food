@@ -98,7 +98,7 @@
             @rejected="onRejected"
           />
           <q-stepper-navigation>
-            <q-btn @click="closeModal" color="primary" label="Finalizar" />
+            <q-btn @click="handleSubmit" color="primary" label="Salvar" />
             <q-btn
               flat
               @click="step = 3"
@@ -140,7 +140,10 @@ export default defineComponent({
       description: '',
       price: '',
       image: '',
-      categoryId: 0,
+      category: {
+        id: 0,
+        title: ''
+      },
       isAvailable: true
     })
 
@@ -160,6 +163,7 @@ export default defineComponent({
     onMounted(() => {
       getCategoriesList()
       isEditing.value && getProduct()
+      console.log('IsEditing: ', isEditing.value)
     })
 
     async function getCategoriesList () {
@@ -191,11 +195,64 @@ export default defineComponent({
           )
         }
         product.value = response.data.attributes.product
+        selectedCategoryTitle.value = response.data.attributes.product.category.title
       } catch (error) {
         console.error(error)
       } finally {
         $q.loading.hide()
       }
+    }
+
+    async function handleCreateProduct () {
+      try {
+        $q.loading.show()
+        const productPayload = {
+          title: product.value.title,
+          description: product.value.description,
+          price: product.value.price,
+          image: product.value.image,
+          category: {
+            id: 0,
+            title: ''
+          },
+          isAvailable: true
+        }
+        const { data: response } = await httpClient.post('products', productPayload)
+        closeModal()
+        console.log(response)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        $q.loading.hide()
+      }
+    }
+
+    async function handleEditProduct () {
+      try {
+        $q.loading.show()
+        const productPayload = {
+          title: product.value.title,
+          description: product.value.description,
+          price: product.value.price,
+          image: product.value.image,
+          category: {
+            id: 0,
+            title: ''
+          },
+          isAvailable: true
+        }
+        const { data: response } = await httpClient.put(`products/${props.productId}`, productPayload)
+        closeModal()
+        console.log(response.data)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        $q.loading.hide()
+      }
+    }
+
+    function handleSubmit () {
+      isEditing.value ? handleEditProduct() : handleCreateProduct()
     }
 
     function clearSelectedCategory () {
@@ -229,7 +286,8 @@ export default defineComponent({
       createCategory,
       isCreateCategoryAvailable,
       clearSelectedCategory,
-      isEditing
+      isEditing,
+      handleSubmit
     }
   }
 })

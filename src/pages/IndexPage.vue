@@ -2,11 +2,11 @@
   <q-page class="column items-start">
     <Banner title="Pedidos" />
 
-     <q-splitter
+    <q-splitter
       v-model="splitterModel"
       class="full-width"
       style="height: 80vh; width"
-      >
+    >
       <template v-slot:before>
         <div class="full-height col justify-between">
           <q-input
@@ -21,24 +21,35 @@
             </template>
 
             <template v-slot:append>
-              <q-icon v-if="filter !== ''" name="close" @click="filter = ''" class="cursor-pointer" />
+              <q-icon
+                v-if="filter !== ''"
+                name="close"
+                @click="filter = ''"
+                class="cursor-pointer"
+              />
             </template>
           </q-input>
 
-          <p class="text-right q-pr-md text-grey">Pedidos: {{ orders.length }}</p>
+          <p class="text-right q-pr-md text-grey">
+            Pedidos: {{ orders.length }}
+          </p>
 
           <OrdersList
-             v-for="order in orderFilters"
-             :key="order.id"
-             :order="order"
-             @click="() => handleSelectOrder(order)"
-           />
+            v-for="order in orderFilters"
+            :key="order.id"
+            :order="order"
+            @click="() => handleSelectOrder(order)"
+          />
         </div>
       </template>
 
       <template v-slot:after>
         <div class="q-pa-md">
-          <OrderDetails v-if="selectedOrder" :order="selectedOrder" @change-status="changeStatus"/>
+          <OrderDetails
+            v-if="selectedOrder"
+            :order="selectedOrder"
+            @change-status="changeStatus"
+          />
         </div>
       </template>
     </q-splitter>
@@ -74,7 +85,11 @@ export default defineComponent({
         return orders.value
       }
 
-      return orders.value.filter(order => String(order.id) === filter.value || order.client.name === filter.value)
+      return orders.value.filter(
+        (order) =>
+          String(order.id) === filter.value ||
+          order.client.name === filter.value
+      )
     })
     const selectedOrder = ref<OrderModel>()
 
@@ -84,8 +99,12 @@ export default defineComponent({
       try {
         $q.loading.show()
         const { data: response } = await httpClient.get('orders')
-        if (!response.data) throw new Error('Ocorreu um erro ao tentar carregar os pedidos. Tente novamente mais tarde')
-        orders.value = response.data
+        if (!response.data) {
+          throw new Error(
+            'Ocorreu um erro ao tentar carregar os pedidos. Tente novamente mais tarde'
+          )
+        }
+        orders.value = response.data.attributes.orders
       } catch (error) {
         console.error(error)
       } finally {
@@ -98,8 +117,7 @@ export default defineComponent({
     }
 
     function changeStatus (orderId: number, status: OrderModel['status']) {
-      console.log('Event: change-status')
-      const newOrderArray = orders.value.map(order => {
+      const newOrderArray = orders.value.map((order) => {
         if (order.id === orderId) {
           order.status = status
           return order

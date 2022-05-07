@@ -4,6 +4,7 @@
       class="col-2 q-mx-md q-my-md"
       v-for="item in items"
       :key="item.id"
+      :id="item.id"
       :title="item.title"
       :description="item.description"
       :price="item.price"

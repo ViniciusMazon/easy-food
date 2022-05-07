@@ -2,7 +2,10 @@ export interface MenuItemModel {
   title: string;
   description: string;
   price: string;
-  categoryId: number;
+  category: {
+    id: number;
+    title: string
+  },
   image: string;
   isAvailable: boolean;
   id?: number;

@@ -8,18 +8,33 @@
 
       <div class="row justify-between">
         <p class="text-grey text-subtitle1">
-          {{ order.address.street }},
-          nº {{ order.address.number }},
-          {{ order.address.district }}.
-          {{ order.address.city }} / {{ order.address.uf }}
+          {{ order.address.street }}, nº {{ order.address.number }},
+          {{ order.address.district }}. {{ order.address.city }} /
+          {{ order.address.uf }}
         </p>
         <div v-if="wasAccepted">
-          <q-btn class="q-px-xl" color="grey" text-color="white" label="Imprimir" />
+          <q-btn
+            class="q-px-xl"
+            color="grey"
+            text-color="white"
+            label="Imprimir"
+          />
         </div>
 
         <div v-if="!wasAccepted">
-          <q-btn class="q-px-xl q-mr-sm" color="green" text-color="white" label="Aceitar" @click="handleAcceptOrder"/>
-          <q-btn class="q-px-xl" color="red" text-color="white" label="Recusar" />
+          <q-btn
+            class="q-px-xl q-mr-sm"
+            color="green"
+            text-color="white"
+            label="Aceitar"
+            @click="handleAcceptOrder"
+          />
+          <q-btn
+            class="q-px-xl"
+            color="red"
+            text-color="white"
+            label="Recusar"
+          />
         </div>
       </div>
     </q-card>
@@ -61,7 +76,7 @@
       </div>
     </q-card>
   </div>
-  </template>
+</template>
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
@@ -102,12 +117,16 @@ export default defineComponent({
       }
     ]
 
-    const subtotal = ref<number>(props.order.cart.reduce((acc: number, cur: ItemModel) => {
-      console.log(acc)
-      return (Number(cur.priceUnity) * Number(cur.qtd)) + acc
-    }, 0))
+    const subtotal = ref<number>(
+      props.order.cart.reduce((acc: number, cur: ItemModel) => {
+        return Number(cur.priceUnity) * Number(cur.qtd) + acc
+      }, 0)
+    )
 
-    const total = computed((): number => subtotal.value + props.order.deliveryTax - props.order.discount)
+    const total = computed(
+      (): number =>
+        subtotal.value + props.order.deliveryTax - props.order.discount
+    )
 
     function handleAcceptOrder () {
       wasAccepted.value = true

@@ -1,13 +1,25 @@
 <template>
   <teleport to="body">
-    <component v-if="state.isActive" :is="state.component" v-bind="state.props"/>
+    <component
+      v-if="state.isActive"
+      :is="state.component"
+      v-bind="state.props"
+    />
   </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, defineAsyncComponent, onBeforeUnmount, onMounted } from 'vue'
+import {
+  defineComponent,
+  reactive,
+  defineAsyncComponent,
+  onBeforeUnmount,
+  onMounted
+} from 'vue'
 import useModal from '../hooks/useModal'
-const AddProductModal = defineAsyncComponent(() => import('components/AddProductModal.vue'))
+const ProductModal = defineAsyncComponent(
+  () => import('components/ProductModal.vue')
+)
 
 export interface IModalFactoryPayload {
   isActive?: boolean;
@@ -19,7 +31,7 @@ export interface IModalFactoryPayload {
 export default defineComponent({
   name: 'ModalFactory',
   components: {
-    AddProductModal
+    ProductModal
   },
   setup () {
     const modal = useModal()
@@ -38,7 +50,6 @@ export default defineComponent({
     })
 
     function handleModalToggle (payload: IModalFactoryPayload) {
-      console.log('Payload', payload.status)
       if (payload) {
         state.component = payload.component
         state.props = payload.props

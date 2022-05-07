@@ -38,7 +38,7 @@
     <q-separator />
 
     <q-card-actions class="row justify-end">
-      <q-btn flat color="grey" @click="(id) => handleOpenEditProductModal(id)">
+      <q-btn flat color="grey" @click="handleOpenEditProductModal">
         Editar
       </q-btn>
     </q-card-actions>
@@ -98,11 +98,11 @@ export default defineComponent({
       isPriceLocked.value = !isPriceLocked.value
     }
 
-    function handleOpenEditProductModal (productId: number) {
+    function handleOpenEditProductModal () {
       modal.open({
-        component: 'AddProductModal',
+        component: 'ProductModal',
         props: {
-          productId
+          productId: props.id
         }
       })
     }

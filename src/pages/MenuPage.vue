@@ -33,9 +33,9 @@ export default defineComponent({
     async function getProducts () {
       try {
         $q.loading.show()
-        const { data: response } = await httpClient.get('products')
-        if (!response.data) throw new Error('Não foi possível carregar os produtos. Tente novamente mais tarde.')
-        categories.value = response.data
+        const { data: response, status } = await httpClient.get('products')
+        if (status !== 200) throw new Error('Não foi possível carregar os produtos. Tente novamente mais tarde.')
+        categories.value = response.data.attributes.products
       } catch (error) {
         console.error(error)
       } finally {
@@ -45,7 +45,7 @@ export default defineComponent({
 
     function addProduct () {
       modal.open({
-        component: 'AddProductModal'
+        component: 'ProductModal'
       })
     }
 
