@@ -203,18 +203,29 @@ export default defineComponent({
       }
     }
 
+    function getCategoryObjectByTitle () {
+      if (newCategoryTitle.value !== '') {
+        return {
+          id: 0,
+          title: newCategoryTitle.value
+        }
+      }
+
+      const category = categories.value.filter(category => category.title === selectedCategoryTitle.value)[0]
+      return category
+    }
+
     async function handleCreateProduct () {
       try {
         $q.loading.show()
+        const categoryObject = getCategoryObjectByTitle()
+
         const productPayload = {
           title: product.value.title,
           description: product.value.description,
           price: product.value.price,
           image: product.value.image,
-          category: {
-            id: 0,
-            title: ''
-          },
+          category: categoryObject,
           isAvailable: true
         }
         const { data: response } = await httpClient.post('products', productPayload)
@@ -230,15 +241,15 @@ export default defineComponent({
     async function handleEditProduct () {
       try {
         $q.loading.show()
+
+        const categoryObject = getCategoryObjectByTitle()
+
         const productPayload = {
           title: product.value.title,
           description: product.value.description,
           price: product.value.price,
           image: product.value.image,
-          category: {
-            id: 0,
-            title: ''
-          },
+          category: categoryObject,
           isAvailable: true
         }
         const { data: response } = await httpClient.put(`products/${props.productId}`, productPayload)
