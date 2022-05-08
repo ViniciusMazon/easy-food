@@ -163,7 +163,6 @@ export default defineComponent({
     onMounted(() => {
       getCategoriesList()
       isEditing.value && getProduct()
-      console.log('IsEditing: ', isEditing.value)
     })
 
     async function getCategoriesList () {
@@ -171,12 +170,14 @@ export default defineComponent({
         $q.loading.show()
         const { data: response, status } = await httpClient.get('categories')
         if (status !== 200) {
-          throw new Error(
-            'Ocorreu um erro ao carregar as inforações. Tente novamente mais tarde'
-          )
+          throw new Error()
         }
         categories.value = response.data.attributes.categories
       } catch (error) {
+        $q.notify({
+          type: 'negative',
+          message: 'Ocorreu um erro ao carregar o produto. Tente novamente mais tarde.'
+        })
         console.error(error)
       } finally {
         $q.loading.hide()
@@ -190,13 +191,15 @@ export default defineComponent({
           `products/${props.productId}`
         )
         if (status !== 200) {
-          throw new Error(
-            'Ocorreu um erro ao carregar as informações do produto. Tente novamente mais tarde'
-          )
+          throw new Error()
         }
         product.value = response.data.attributes.product
         selectedCategoryTitle.value = response.data.attributes.product.category.title
       } catch (error) {
+        $q.notify({
+          type: 'negative',
+          message: 'Ocorreu um erro. Tente novamente mais tarde.'
+        })
         console.error(error)
       } finally {
         $q.loading.hide()
@@ -230,8 +233,15 @@ export default defineComponent({
         }
         const { data: response } = await httpClient.post('products', productPayload)
         closeModal()
-        console.log(response)
+        $q.notify({
+          type: 'positive',
+          message: 'Produto criado com sucesso'
+        })
       } catch (error) {
+        $q.notify({
+          type: 'negative',
+          message: 'Ocorreu um erro ao criar o produto. Tente novamente mais tarde.'
+        })
         console.error(error)
       } finally {
         $q.loading.hide()
@@ -254,8 +264,15 @@ export default defineComponent({
         }
         const { data: response } = await httpClient.put(`products/${props.productId}`, productPayload)
         closeModal()
-        console.log(response.data)
+        $q.notify({
+          type: 'positive',
+          message: 'Produto editado com sucesso'
+        })
       } catch (error) {
+        $q.notify({
+          type: 'negative',
+          message: 'Ocorreu um erro ao editar o produto. Tente novamente mais tarde'
+        })
         console.error(error)
       } finally {
         $q.loading.hide()
