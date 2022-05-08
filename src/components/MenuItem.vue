@@ -24,7 +24,7 @@
 
       <q-input
         filled
-        v-model="text"
+        v-model="newPrice"
         :placeholder="price"
         :readonly="isPriceLocked"
       >
@@ -46,8 +46,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { useQuasar } from 'quasar'
+import { defineComponent, ref, watch } from 'vue'
 import useModal from '../hooks/useModal'
+import { httpClient } from '../services/httpClient'
 
 export default defineComponent({
   name: 'MenuItem',
@@ -86,9 +88,13 @@ export default defineComponent({
     }
   },
   setup (props) {
+    const $q = useQuasar()
     const modal = useModal()
     const isPriceLocked = ref<boolean>(true)
     const isAvailableIcon = ref<string>(props.isAvailable ? 'pause' : 'play_arrow')
+    const newPrice = ref<string>('')
+
+    watch(newPrice, () => isPriceValid())
 
     function toggleAvailability () {
       isAvailableIcon.value = isAvailableIcon.value === 'pause' ? 'play_arrow' : 'pause'
@@ -96,6 +102,34 @@ export default defineComponent({
 
     function toggleLockPrice () {
       isPriceLocked.value = !isPriceLocked.value
+    }
+
+    function isPriceValid () {
+      console.log('Ocorrencia: ', newPrice.value)
+      const regExp = /^[1-9]\d{0,2}(\.\d{3})*,\d{2}$/
+      if (regExp.test(newPrice.value)) {
+        editPrice()
+      }
+    }
+
+    async function editPrice () {
+      try {
+        $q.loading.show()
+        await httpClient.patch(`products/${props.id}`)
+        $q.notify({
+          type: 'positive',
+          message: 'Preço editado com sucesso'
+        })
+        newPrice.value = ''
+      } catch (error) {
+        $q.notify({
+          type: 'negative',
+          message: 'Ocorreu um erro ao editar o preço do produto. Tente novamente mais tarde.'
+        })
+        console.error(error)
+      } finally {
+        $q.loading.hide()
+      }
     }
 
     function handleOpenEditProductModal () {
@@ -112,7 +146,9 @@ export default defineComponent({
       isAvailableIcon,
       toggleLockPrice,
       toggleAvailability,
-      handleOpenEditProductModal
+      newPrice,
+      handleOpenEditProductModal,
+      isPriceValid
     }
   }
 })
