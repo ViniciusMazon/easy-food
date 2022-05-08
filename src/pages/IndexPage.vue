@@ -100,12 +100,14 @@ export default defineComponent({
         $q.loading.show()
         const { data: response } = await httpClient.get('orders')
         if (!response.data) {
-          throw new Error(
-            'Ocorreu um erro ao tentar carregar os pedidos. Tente novamente mais tarde'
-          )
+          throw new Error()
         }
         orders.value = response.data.attributes.orders
       } catch (error) {
+        $q.notify({
+          type: 'negative',
+          message: 'Ocorreu um erro ao tentar carregar os pedidos. Tente novamente mais tarde'
+        })
         console.error(error)
       } finally {
         $q.loading.hide()
