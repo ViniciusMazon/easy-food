@@ -26,7 +26,7 @@
         filled
         v-model="text"
         :placeholder="price"
-        :readonly="{isPriceLoked}"
+        :readonly="isPriceLocked"
       >
        <template v-slot:append>
          <q-icon v-if="isPriceLocked" name="lock" color="text-grey" @click="toggleLockPrice" />
