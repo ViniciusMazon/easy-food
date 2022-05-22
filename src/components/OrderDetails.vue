@@ -12,16 +12,17 @@
           {{ order.address.district }}. {{ order.address.city }} /
           {{ order.address.uf }}
         </p>
-        <div v-if="wasAccepted">
+        <div v-if="isInProgress">
           <q-btn
             class="q-px-xl"
             color="grey"
             text-color="white"
             label="Imprimir"
+            @click="handleDeliveryOrder"
           />
         </div>
 
-        <div v-if="!wasAccepted">
+        <div v-if="isNewOrder">
           <q-btn
             class="q-px-xl q-mr-sm"
             color="green"
@@ -34,6 +35,7 @@
             color="red"
             text-color="white"
             label="Recusar"
+            @click="handleCancelOrder"
           />
         </div>
       </div>
@@ -81,10 +83,10 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import { ItemModel } from 'components/models'
+import useStatus from '../hooks/useStatus'
 
 export default defineComponent({
   name: 'OrderDetails',
-  emits: ['changeStatus'],
   props: {
     order: {
       type: Object,
@@ -92,7 +94,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const wasAccepted = ref<boolean>(false)
+    const status = useStatus()
     const columns = [
       {
         name: 'qtd',
@@ -116,7 +118,6 @@ export default defineComponent({
         field: (row: ItemModel) => Number(row.priceUnity) * Number(row.qtd)
       }
     ]
-
     const subtotal = ref<number>(
       props.order.cart.reduce((acc: number, cur: ItemModel) => {
         return Number(cur.priceUnity) * Number(cur.qtd) + acc
@@ -128,16 +129,42 @@ export default defineComponent({
         subtotal.value + props.order.deliveryTax - props.order.discount
     )
 
+    const isNewOrder = computed(() => props.order.status === 'new')
+    const isInProgress = computed(() => props.order.status === 'inProgress')
+
     function handleAcceptOrder () {
-      wasAccepted.value = true
+      const payload = {
+        id: props.order.id,
+        status: 'inProgress'
+      }
+      status.change(payload)
+    }
+
+    function handleDeliveryOrder () {
+      const payload = {
+        id: props.order.id,
+        status: 'delivered'
+      }
+      status.change(payload)
+    }
+
+    function handleCancelOrder () {
+      const payload = {
+        id: props.order.id,
+        status: 'canceled'
+      }
+      status.change(payload)
     }
 
     return {
       columns,
       subtotal,
       total,
-      wasAccepted,
-      handleAcceptOrder
+      isNewOrder,
+      isInProgress,
+      handleAcceptOrder,
+      handleDeliveryOrder,
+      handleCancelOrder
     }
   }
 })

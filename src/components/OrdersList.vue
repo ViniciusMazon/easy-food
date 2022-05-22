@@ -10,13 +10,10 @@
         <p class="text-red text-bold">{{ timeWasCanceled }}</p>
       </div>
 
-      <div v-else class="row justify-between">
-        <p class="text-bold text-yellow">{{ timeWasAccept }}</p>
+      <div v-else class="row">
+        <p class="text-bold text-indigo">{{ timeWasAccept }}</p>
         <q-icon class="q-mx-sm" name="play_arrow" color="grey"/>
-        <p class="text-bold text-indigo">{{ timeWasDelivered }}</p>
-        <q-icon class="q-mx-sm" name="play_arrow" color="grey"/>
-        <p class="text-bold text-green">{{ timeWasFinished }}</p>
-        <q-icon class="q-mx-sm" name="play_arrow" color="grey"/>
+        <p class="text-bold text-green">{{ timeWasDelivered }}</p>
       </div>
     </div>
     <div
@@ -68,16 +65,14 @@ export default defineComponent({
           break
         case 'inProgress':
           timeWasAccept.value = getCurrentTime()
-          statusColor.value = 'bg-yellow'
-          break
-        case 'delivered':
-          timeWasFinished.value = getCurrentTime()
           statusColor.value = 'bg-indigo'
           break
-        case 'finished':
+        case 'delivered':
+          timeWasDelivered.value = getCurrentTime()
           statusColor.value = 'bg-green'
           break
         case 'canceled':
+          timeWasCanceled.value = getCurrentTime()
           statusColor.value = 'bg-red'
           break
         default:

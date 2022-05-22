@@ -45,7 +45,7 @@ export interface ItemModel {
 
 export interface OrderModel {
   id: number;
-  status: 'new'|'inProgress'|'delivered'|'finished'|'canceled';
+  status: 'new'|'inProgress'|'delivered'|'canceled';
   observations: string;
   deliveryTax: number;
   discount: number;

@@ -231,7 +231,7 @@ export default defineComponent({
           category: categoryObject,
           isAvailable: true
         }
-        const { data: response } = await httpClient.post('products', productPayload)
+        await httpClient.post('products', productPayload)
         closeModal()
         $q.notify({
           type: 'positive',

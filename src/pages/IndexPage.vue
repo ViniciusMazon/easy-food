@@ -61,6 +61,7 @@ import { useQuasar } from 'quasar'
 import { Meta, OrderModel } from 'components/models'
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { httpClient } from '../services/httpClient'
+import useStatus from '../hooks/useStatus'
 import Banner from 'components/Banner.vue'
 import OrdersList from 'components/OrdersList.vue'
 import OrderDetails from 'components/OrderDetails.vue'
@@ -73,6 +74,7 @@ export default defineComponent({
     OrderDetails
   },
   setup () {
+    const status = useStatus()
     const $q = useQuasar()
     const meta = ref<Meta>({
       totalCount: 1200
@@ -94,6 +96,7 @@ export default defineComponent({
     const selectedOrder = ref<OrderModel>()
 
     onMounted(() => getOrders())
+    onMounted(() => status.listen(changeStatus))
 
     async function getOrders () {
       try {
@@ -103,6 +106,7 @@ export default defineComponent({
           throw new Error()
         }
         orders.value = response.data.attributes.orders
+        selectedOrder.value = response.data.attributes.orders[0]
       } catch (error) {
         $q.notify({
           type: 'negative',
@@ -118,16 +122,16 @@ export default defineComponent({
       selectedOrder.value = order
     }
 
-    function changeStatus (orderId: number, status: OrderModel['status']) {
+    function changeStatus (payload: any) {
+      const orderId: number = payload.id
+      const status: OrderModel['status'] = payload.status
       const newOrderArray = orders.value.map((order) => {
         if (order.id === orderId) {
           order.status = status
           return order
         }
-
         return order
       })
-
       orders.value = newOrderArray
     }
 
