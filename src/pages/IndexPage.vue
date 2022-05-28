@@ -61,6 +61,7 @@ import { useQuasar } from 'quasar'
 import { Meta, OrderModel } from 'components/models'
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { httpClient } from '../services/httpClient'
+import { IStatusPayload } from '../utils/bus'
 import useStatus from '../hooks/useStatus'
 import Banner from 'components/Banner.vue'
 import OrdersList from 'components/OrdersList.vue'
@@ -95,18 +96,53 @@ export default defineComponent({
     })
     const selectedOrder = ref<OrderModel>()
 
-    onMounted(() => getOrders())
+    onMounted(async () => await getOrders())
     onMounted(() => status.listen(changeStatus))
 
-    async function getOrders () {
+    function orderOrdersByStatus (ordersList: OrderModel[]): OrderModel[] {
+      const newOrder: OrderModel[] = []
+      const inProgress: OrderModel[] = []
+      const delivered: OrderModel[] = []
+      const canceled: OrderModel[] = []
+
+      ordersList.forEach(order => {
+        switch (order.status) {
+          case 'inProgress':
+            inProgress.push(order)
+            break
+          case 'new':
+            newOrder.push(order)
+            break
+          case 'delivered':
+            delivered.push(order)
+            break
+          case 'canceled':
+            canceled.push(order)
+            break
+        }
+      })
+
+      return [
+        ...newOrder,
+        ...inProgress,
+        ...delivered,
+        ...canceled
+      ]
+    }
+
+    function setFirstOrderView (firstItem: OrderModel): void {
+      selectedOrder.value = firstItem
+    }
+
+    async function getOrders (): Promise<void> {
       try {
         $q.loading.show()
         const { data: response } = await httpClient.get('orders')
         if (!response.data) {
           throw new Error()
         }
-        orders.value = response.data.attributes.orders
-        selectedOrder.value = response.data.attributes.orders[0]
+        orders.value = orderOrdersByStatus(response.data.attributes.orders)
+        setFirstOrderView(orders.value[0])
       } catch (error) {
         $q.notify({
           type: 'negative',
@@ -118,11 +154,11 @@ export default defineComponent({
       }
     }
 
-    function handleSelectOrder (order: OrderModel) {
+    function handleSelectOrder (order: OrderModel): void {
       selectedOrder.value = order
     }
 
-    function changeStatus (payload: any) {
+    function changeStatus (payload: IStatusPayload): void {
       const orderId: number = payload.id
       const status: OrderModel['status'] = payload.status
       const newOrderArray = orders.value.map((order) => {
