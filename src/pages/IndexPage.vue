@@ -88,11 +88,10 @@ export default defineComponent({
         return orders.value
       }
 
-      return orders.value.filter(
-        (order) =>
-          String(order.id) === filter.value ||
-          order.client.name === filter.value
-      )
+      return orders.value.filter(order => {
+        return String(order.id).includes(filter.value) ||
+        order.client.name.toLocaleLowerCase().includes(filter.value.toLocaleLowerCase())
+      })
     })
     const selectedOrder = ref<OrderModel>()
 
