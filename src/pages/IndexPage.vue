@@ -59,7 +59,7 @@
 <script lang="ts">
 import { useQuasar } from 'quasar'
 import { Meta, OrderModel } from 'components/models'
-import { defineComponent, ref, computed, onMounted } from 'vue'
+import { defineComponent, ref, computed, onMounted, watch } from 'vue'
 import { httpClient } from '../services/httpClient'
 import { IStatusPayload } from '../utils/bus'
 import useStatus from '../hooks/useStatus'
@@ -98,6 +98,12 @@ export default defineComponent({
 
     onMounted(async () => await getOrders())
     onMounted(() => status.listen(changeStatus))
+    watch(orders, () => {
+      const newOrders = orders.value.filter(order => order.status === 'new')
+      if (newOrders.length > 0) {
+        showNewOrderConfirmationModal(newOrders[0])
+      }
+    })
 
     function orderOrdersByStatus (ordersList: OrderModel[]): OrderModel[] {
       const newOrder: OrderModel[] = []
@@ -160,7 +166,7 @@ export default defineComponent({
 
     function changeStatus (payload: IStatusPayload): void {
       const orderId: number = payload.id
-      const status: OrderModel['status'] = payload.status
+      const status: string = payload.status
       const newOrderArray = orders.value.map((order) => {
         if (order.id === orderId) {
           order.status = status
@@ -169,6 +175,22 @@ export default defineComponent({
         return order
       })
       orders.value = newOrderArray
+    }
+
+    function showNewOrderConfirmationModal (newOrder: OrderModel): void {
+      $q.notify({
+        group: 'newOrders',
+        progress: true,
+        timeout: 10000,
+        message: `Novo pedido, #${newOrder.id} de ${newOrder.client.name}`,
+        color: 'white',
+        textColor: 'black',
+        avatar: 'https://i.pinimg.com/originals/02/c5/a8/02c5a82909a225411008d772ee6b7d62.png',
+        actions: [
+          { label: 'Aceitar', color: 'green', handler: () => changeStatus({ id: newOrder.id, status: 'inProgress' }) },
+          { label: 'Cancelar', color: 'red', handler: () => changeStatus({ id: newOrder.id, status: 'canceled' }) }
+        ]
+      })
     }
 
     return {
