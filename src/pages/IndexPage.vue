@@ -178,6 +178,8 @@ export default defineComponent({
     }
 
     function showNewOrderConfirmationModal (newOrder: OrderModel): void {
+      const notificationSound = new Audio(require('../assets/notification.mp3'))
+      notificationSound.play()
       $q.notify({
         group: 'newOrders',
         progress: true,
