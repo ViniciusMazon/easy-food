@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn src/infra/express/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prisma:migrate": "prisma migrate dev --name init"
   },
   "prisma": {
     "schema": "src/infra/prisma/schema.prisma"

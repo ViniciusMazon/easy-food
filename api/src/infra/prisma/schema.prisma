@@ -7,9 +7,100 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Category {
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(120)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  products Product[] 
+
+  @@map("categories")
+}
+
 model Product {
   id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  title String @db.VarChar(120)
+  description String @db.VarChar(255)
+  price String @db.VarChar(20)
+  imageUrl String @db.VarChar(255) @map("image_url")
+  isAvailable Boolean @default(true) @map("is_available")
+  categoryId Int @map("category_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category Category @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[] 
+
+  @@map("products")
+}
+
+model Address {
+  id Int @id @default(autoincrement())
+  street String @db.VarChar(120)
+  number String @db.VarChar(10)
+  district String @db.VarChar(120)
+  city String @db.VarChar(120)
+  uf String @db.VarChar(2)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User?
+
+  @@map("addresses")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(120)
+  cpf String @db.VarChar(11)
+  addressId Int @map("address_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  address Address @relation(fields: [addressId], references: [id])
+  orders Order[] 
+ 
+  @@unique([cpf])
+  @@map("users")
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  deliveryTax Float @map("delivery_tax")
+  total Float
+  totalPayable Float @map("total_payable")
+  status OrderStatus @default(waitingForConfirmation)
+  acceptedAt DateTime @map("accepted_at")
+  deliveredAt DateTime @map("delivered_at")
+  canceledAt DateTime @map("canceled_at")
+  userId Int @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orderItems OrderItem[]
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  waitingForConfirmation
+  inProgress
+  delivered
+  caleced
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+  qtd Int @default(1)
+  productId Int @map("product_id")
+  orderId Int @map("order_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  product Product @relation(fields: [productId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("order_items")
 }

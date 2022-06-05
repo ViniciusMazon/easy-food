@@ -1,8 +1,8 @@
 version: '3.7'
 services:
-  database:
+  db:
     image: postgres
-    container_name: postgres 
+    container_name: db 
     restart: always
     ports:
       - '5432:5432'
@@ -20,9 +20,9 @@ services:
     volumes:
       - '.:/usr/app'
     links:
-      - database 
+      - db 
     depends_on:
-      - database 
+      - db 
 volumes:
   pgdata:
     driver: local
